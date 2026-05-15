@@ -10,20 +10,12 @@
     
     <style>
         :root {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --primary: #0f172a;
-            --accent: #3b82f6;
-            --text-sub: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --border: #e2e8f0;
+            --bg: #f8fafc; --surface: #ffffff; --primary: #0f172a;
+            --accent: #3b82f6; --text-sub: #64748b; --success: #10b981;
+            --danger: #ef4444; --border: #e2e8f0;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--primary); padding-bottom: 80px; } /* Space for mobile nav */
-
-        /* --- MOBILE NAVIGATION --- */
+        body { background: var(--bg); color: var(--primary); padding-bottom: 80px; }
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
             background: var(--surface); display: flex; justify-content: space-around;
@@ -31,101 +23,65 @@
         }
         .nav-item { flex: 1; text-align: center; font-size: 0.75rem; color: var(--text-sub); font-weight: 600; cursor: pointer; }
         .nav-item.active { color: var(--accent); }
-        .nav-item i { display: block; font-size: 1.2rem; margin-bottom: 4px; }
-
-        /* --- LAYOUT --- */
         .page { display: none; padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- COMPONENTS --- */
-        .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
-        h1 { font-size: 1.5rem; margin-bottom: 20px; }
-        h2 { font-size: 1rem; margin-bottom: 15px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
-
-        .btn { 
-            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
-            transition: 0.2s; font-size: 0.9rem; margin-top: 10px;
-        }
+        .card { background: var(--surface); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border); }
+        .btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 0.9rem; }
         .btn-primary { background: var(--accent); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
-
-        input, select { 
-            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 1rem;
-        }
-
-        /* --- TASK ITEMS --- */
-        .task-item { 
-            background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 10px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .task-info h4 { font-size: 0.95rem; }
-        .task-info p { font-size: 0.8rem; color: var(--text-sub); }
-
-        /* --- TIMER AREA --- */
-        #timer-val { font-size: 3rem; font-weight: 800; text-align: center; margin: 20px 0; color: var(--primary); }
-        .payout-live { text-align: center; font-weight: 700; color: var(--success); font-size: 1.2rem; }
-
-        /* --- ATTENDANCE --- */
-        .attendance-status { text-align: center; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
-        .status-in { background: #dcfce7; color: #166534; }
-        .status-out { background: #fee2e2; color: #991b1b; }
+        .btn-outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); margin-top: 15px; }
+        input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; }
+        .task-item { background: white; padding: 18px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
+        #timer-val { font-size: 4rem; font-weight: 800; text-align: center; margin: 15px 0; letter-spacing: -2px; }
+        .payout-live { text-align: center; font-weight: 700; color: var(--success); font-size: 1.4rem; margin-bottom: 20px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- TAB 1: ASSIGN & PENDING -->
     <div id="tab-tasks" class="page active">
-        <h1>Work Station</h1>
+        <h1 style="margin-bottom:20px">Work Station</h1>
         <div class="card">
-            <h2>Assign New Task</h2>
-            <input type="text" id="t-name" placeholder="Task Name">
+            <h2 style="font-size:1rem; margin-bottom:15px">New Task</h2>
+            <input type="text" id="t-name" placeholder="Task description...">
             <div style="display:flex; gap:10px">
-                <input type="number" id="t-hr" placeholder="Hrs">
-                <input type="number" id="t-min" placeholder="Min">
+                <input type="number" id="t-hr" placeholder="Hours">
+                <input type="number" id="t-min" placeholder="Minutes">
             </div>
             <button class="btn btn-primary" onclick="addPending()">Add to Pending</button>
         </div>
-
-        <h2>Pending Queue</h2>
+        <h2 style="font-size:0.9rem; color:var(--text-sub); text-transform:uppercase; margin: 20px 0 10px 5px;">Pending Queue</h2>
         <div id="pending-list"></div>
     </div>
 
-    <!-- TAB 2: ONGOING -->
     <div id="tab-ongoing" class="page">
         <h1>Ongoing Work</h1>
-        <div class="card" id="active-work-card">
-            <div id="ongoing-content">
-                <p style="text-align:center; color:var(--text-sub)">No task running.</p>
-            </div>
+        <div class="card" id="ongoing-content">
+            <p style="text-align:center; color:var(--text-sub); padding:40px 0;">No active tasks found in the system.</p>
         </div>
     </div>
 
-    <!-- TAB 3: REPORT (ATTENDANCE) -->
     <div id="tab-report" class="page">
-        <h1>Reporting Desk</h1>
-        <div class="card attendance-status status-out" id="att-box">
-            <span id="att-text">OFF DUTY</span>
+        <h1>Attendance</h1>
+        <div class="card" id="att-box" style="text-align:center; padding:30px;">
             <h3 id="current-time-display">00:00:00</h3>
+            <p id="att-text" style="font-weight:700; margin-top:10px">Status: STANDBY</p>
         </div>
         <div style="display:flex; gap:10px">
             <button class="btn btn-success" onclick="attendance('IN')">Clock In</button>
             <button class="btn btn-danger" onclick="attendance('OUT')">Clock Out</button>
         </div>
-        <h2 style="margin-top:25px">Log Book</h2>
-        <div id="attendance-logs"></div>
+        <div id="attendance-logs" style="margin-top:20px"></div>
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
     <div class="bottom-nav">
         <div class="nav-item active" onclick="showTab('tasks')">Tasks</div>
         <div class="nav-item" onclick="showTab('ongoing')">Ongoing</div>
-        <div class="nav-item" onclick="showTab('report')">Reporting</div>
+        <div class="nav-item" onclick="showTab('report')">Report</div>
     </div>
 
     <script>
-        // FIREBASE INITIALIZATION
         const firebaseConfig = {
             apiKey: "AIzaSyDL7CPrwuAw-BrIPHQuNtydc1h1g73sFVk",
             authDomain: "centrol-bank.firebaseapp.com",
@@ -137,10 +93,8 @@
         const userRef = db.ref('users/pranshi_main');
 
         let timerInt;
-        let activeTask = null;
         const CEN_RATE_MIN = 350/60;
 
-        // TAB SYSTEM
         function showTab(tabId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -148,37 +102,31 @@
             event.currentTarget.classList.add('active');
         }
 
-        // CLOCK DISPLAY
         setInterval(() => {
             document.getElementById('current-time-display').innerText = new Date().toLocaleTimeString();
         }, 1000);
 
-        // --- TASK LOGIC ---
         async function addPending() {
             const name = document.getElementById('t-name').value;
             const hr = parseInt(document.getElementById('t-hr').value) || 0;
             const min = parseInt(document.getElementById('t-min').value) || 0;
             if(!name) return;
-
             const totalMins = (hr * 60) + min;
             await userRef.child('pending').push({ name, totalMins });
             document.getElementById('t-name').value = '';
         }
 
         userRef.child('pending').on('value', snap => {
-            const data = snap.val();
             const list = document.getElementById('pending-list');
             list.innerHTML = '';
+            const data = snap.val();
             if(!data) return;
             Object.keys(data).forEach(id => {
                 const t = data[id];
                 list.innerHTML += `
                     <div class="task-item">
-                        <div class="task-info">
-                            <h4>${t.name}</h4>
-                            <p>Duration: ${t.totalMins}m</p>
-                        </div>
-                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700">START</button>
+                        <div><b>${t.name}</b><br><small>${t.totalMins}m deadline</small></div>
+                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700">START</button>
                     </div>`;
             });
         });
@@ -186,104 +134,78 @@
         async function startOngoing(id) {
             const snap = await userRef.child('pending/' + id).get();
             const task = snap.val();
-            
-            activeTask = { ...task, startTime: Date.now() };
+            const ongoingTask = { ...task, startTime: Date.now() };
+            await userRef.child('ongoing_active').set(ongoingTask);
             await userRef.child('pending/' + id).remove();
-            
             showTab('ongoing');
-            runTimer();
         }
 
-        function runTimer() {
+        userRef.child('ongoing_active').on('value', snap => {
+            const activeTask = snap.val();
             const container = document.getElementById('ongoing-content');
             clearInterval(timerInt);
+
+            if(!activeTask) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:40px 0;">No active tasks.</p>';
+                return;
+            }
 
             timerInt = setInterval(() => {
                 const elapsedSecs = Math.floor((Date.now() - activeTask.startTime) / 1000);
                 const elapsedMins = elapsedSecs / 60;
-                
                 const h = Math.floor(elapsedSecs / 3600).toString().padStart(2, '0');
                 const m = Math.floor((elapsedSecs % 3600) / 60).toString().padStart(2, '0');
                 const s = (elapsedSecs % 60).toString().padStart(2, '0');
-
                 const payout = calculatePayout(activeTask.totalMins, elapsedMins);
 
                 container.innerHTML = `
-                    <h2>${activeTask.name}</h2>
-                    <p style="font-size:0.8rem">DEADLINE: ${activeTask.totalMins}m</p>
+                    <h2 style="text-align:center">${activeTask.name}</h2>
                     <div id="timer-val">${h}:${m}:${s}</div>
                     <div class="payout-live">CEN ${payout.toFixed(2)}</div>
                     <button class="btn btn-success" onclick="completeTask()">FINISH & CLAIM</button>
+                    <button class="btn btn-outline" onclick="terminateTask()">TERMINATE (NO PAY)</button>
                 `;
             }, 1000);
-        }
+        });
 
         function calculatePayout(assigned, actual) {
             const base = assigned * CEN_RATE_MIN;
             if (actual <= assigned * 0.85) return actual * CEN_RATE_MIN;
             if (actual <= assigned + 60) return base;
-            
-            const penaltyPoint = assigned + 60;
-            const overtime = actual - penaltyPoint;
+            const overtime = actual - (assigned + 60);
             const deductions = Math.floor(overtime / 30) + 1;
             return Math.max(0, base - (base * 0.15 * deductions));
         }
 
         async function completeTask() {
-            clearInterval(timerInt);
+            const snapActive = await userRef.child('ongoing_active').get();
+            const activeTask = snapActive.val();
             const elapsedMins = (Date.now() - activeTask.startTime) / 60000;
             const finalPay = calculatePayout(activeTask.totalMins, elapsedMins);
+            const snapBal = await userRef.child('balance').get();
+            const currentBal = snapBal.val() || 0;
 
-            const snap = await userRef.child('balance').get();
-            const currentBal = snap.val() || 0;
-
-            // Update Bank
             await userRef.update({ balance: currentBal + finalPay });
             await userRef.child('history').push({
-                amount: finalPay,
-                description: "Work: " + activeTask.name,
-                timestamp: new Date().toLocaleString(),
-                type: "CREDIT"
+                amount: finalPay, description: "Work: " + activeTask.name,
+                timestamp: new Date().toLocaleString(), type: "CREDIT"
             });
-
-            alert("Payment Secured: CEN " + finalPay.toFixed(2));
-            location.reload();
+            await userRef.child('ongoing_active').remove();
+            alert("Funds Transferred!");
         }
 
-        // --- ATTENDANCE LOGIC ---
-        async function attendance(type) {
-            const now = new Date();
-            const box = document.getElementById('att-box');
-            const text = document.getElementById('att-text');
-
-            if(type === 'IN') {
-                box.className = 'card attendance-status status-in';
-                text.innerText = "ON DUTY";
-            } else {
-                box.className = 'card attendance-status status-out';
-                text.innerText = "OFF DUTY";
+        async function terminateTask() {
+            if(confirm("Terminate task? This will result in 0 CEN payout and no records.")) {
+                await userRef.child('ongoing_active').remove();
             }
-
-            await userRef.child('attendance_logs').push({
-                type: type,
-                time: now.toLocaleTimeString(),
-                date: now.toLocaleDateString()
-            });
         }
 
-        userRef.child('attendance_logs').limitToLast(10).on('value', snap => {
-            const logs = snap.val();
-            const container = document.getElementById('attendance-logs');
-            container.innerHTML = '';
-            if(!logs) return;
-            Object.values(logs).reverse().forEach(l => {
-                container.innerHTML += `
-                    <div class="task-item" style="background:white; border:1px solid var(--border)">
-                        <span><b>${l.type}</b></span>
-                        <span style="font-size:0.8rem; color:var(--text-sub)">${l.date} ${l.time}</span>
-                    </div>`;
+        async function attendance(type) {
+            await userRef.child('attendance_logs').push({
+                type, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString()
             });
-        });
+            document.getElementById('att-text').innerText = "Status: " + (type === 'IN' ? 'ON DUTY' : 'OFF DUTY');
+        }
     </script>
 </body>
 </html>
