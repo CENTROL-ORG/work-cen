@@ -5,81 +5,375 @@
     <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://apis.google.com;">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEN_WORK | Professional Suite</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
     <style>
         :root {
-            --bg: #f8fafc; --surface: #ffffff; --primary: #0f172a;
-            --accent: #3b82f6; --text-sub: #64748b; --success: #10b981;
-            --danger: #ef4444; --border: #e2e8f0;
+            --bg: #0b0f19;
+            --surface: #141b2d;
+            --surface-card: #1f293d;
+            --primary: #f8fafc;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-sub: #94a3b8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --border: #2d3748;
+            --sidebar-width: 260px;
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--primary); padding-bottom: 80px; }
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
-            background: var(--surface); display: flex; justify-content: space-around;
-            align-items: center; border-top: 1px solid var(--border); z-index: 1000;
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
         }
-        .nav-item { flex: 1; text-align: center; font-size: 0.75rem; color: var(--text-sub); font-weight: 600; cursor: pointer; }
-        .nav-item.active { color: var(--accent); }
-        .page { display: none; padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
-        .page.active { display: block; }
-        .card { background: var(--surface); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); border: 1px solid var(--border); }
-        .btn { width: 100%; padding: 15px; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; font-size: 0.9rem; }
+
+        body { 
+            background: var(--bg); 
+            color: var(--primary); 
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- NAVIGATION SYSTEM --- */
+        /* Desktop Sidebar Layout */
+        .navigation-panel {
+            width: var(--sidebar-width);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand-header {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 40px;
+            padding-left: 10px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-header span {
+            color: var(--accent);
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nav-item { 
+            display: flex;
+            align-items: center;
+            padding: 14px 18px;
+            font-size: 0.95rem; 
+            color: var(--text-sub); 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+            color: #fff;
+        }
+
+        .nav-item.active { 
+            background: var(--accent);
+            color: #ffffff; 
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- MAIN WORKSPACE --- */
+        .workspace {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            padding: 40px;
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        .page { 
+            display: none; 
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+
+        .page.active { 
+            display: block; 
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            letter-spacing: -0.5px;
+        }
+
+        /* --- LUXURY UI CARDS --- */
+        .card { 
+            background: var(--surface); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            border: 1px solid var(--border); 
+        }
+
+        /* --- FORM ELEMENTS --- */
+        input { 
+            width: 100%; 
+            padding: 14px 16px; 
+            background: var(--surface-card);
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            margin-bottom: 16px; 
+            color: white;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        input::placeholder {
+            color: #4a5568;
+        }
+
+        /* --- PREMIUM BUTTONS --- */
+        .btn { 
+            width: 100%; 
+            padding: 14px 24px; 
+            border-radius: 12px; 
+            border: none; 
+            font-weight: 700; 
+            cursor: pointer; 
+            font-size: 0.95rem; 
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
         .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); }
+        
         .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { filter: brightness(1.1); }
+        
         .btn-danger { background: var(--danger); color: white; }
-        .btn-outline { background: transparent; border: 2px solid var(--danger); color: var(--danger); margin-top: 15px; }
-        input { width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 12px; }
-        .task-item { background: white; padding: 18px; border-radius: 16px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border); }
-        #timer-val { font-size: 4rem; font-weight: 800; text-align: center; margin: 15px 0; letter-spacing: -2px; }
-        .payout-live { text-align: center; font-weight: 700; color: var(--success); font-size: 1.4rem; margin-bottom: 20px; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-danger:hover { filter: brightness(1.1); }
+        
+        .btn-outline { 
+            background: transparent; 
+            border: 2px solid var(--border); 
+            color: #e2e8f0; 
+            margin-top: 15px; 
+        }
+        .btn-outline:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* --- DYNAMIC LIST ITEMS --- */
+        .task-item { 
+            background: var(--surface); 
+            padding: 20px; 
+            border-radius: 16px; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border: 1px solid var(--border); 
+            transition: transform 0.2s ease;
+        }
+
+        .task-item:hover {
+            transform: translateY(-2px);
+            border-color: #4a5568;
+        }
+
+        .task-item b {
+            font-size: 1.05rem;
+            color: #fff;
+        }
+
+        .task-item small {
+            color: var(--text-sub);
+            font-weight: 500;
+            display: inline-block;
+            margin-top: 4px;
+        }
+
+        /* --- TIME & ANALYTICS PANELS --- */
+        #timer-val { 
+            font-size: 4.5rem; 
+            font-weight: 800; 
+            text-align: center; 
+            margin: 20px 0; 
+            letter-spacing: -3px; 
+            color: #fff;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .payout-live { 
+            text-align: center; 
+            font-weight: 800; 
+            color: var(--success); 
+            font-size: 1.75rem; 
+            margin-bottom: 25px; 
+            letter-spacing: -0.5px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 10px;
+            border-radius: 12px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        #current-time-display {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+                padding-bottom: 90px;
+            }
+
+            .navigation-panel {
+                position: fixed; 
+                bottom: 0; 
+                left: 0; 
+                width: 100%; 
+                height: 75px;
+                background: var(--surface); 
+                flex-direction: row; 
+                justify-content: space-around;
+                align-items: center; 
+                border-top: 1px solid var(--border); 
+                border-right: none;
+                padding: 0 10px;
+                z-index: 1000;
+                top: auto;
+            }
+
+            .brand-header {
+                display: none;
+            }
+
+            .nav-container {
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-around;
+                gap: 5px;
+            }
+
+            .nav-item { 
+                flex: 1; 
+                flex-direction: column;
+                text-align: center; 
+                justify-content: center;
+                font-size: 0.8rem; 
+                padding: 10px 5px;
+                font-weight: 700;
+            }
+
+            .nav-item.active {
+                box-shadow: none;
+            }
+
+            .workspace {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            #timer-val {
+                font-size: 3.5rem;
+            }
+        }
+
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(12px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
     </style>
 </head>
 <body>
 
-    <div id="tab-tasks" class="page active">
-        <h1 style="margin-bottom:20px">Work Station</h1>
-        <div class="card">
-            <h2 style="font-size:1rem; margin-bottom:15px">New Task</h2>
-            <input type="text" id="t-name" placeholder="Task description...">
-            <div style="display:flex; gap:10px">
-                <input type="number" id="t-hr" placeholder="Hours">
-                <input type="number" id="t-min" placeholder="Minutes">
+    <div class="navigation-panel">
+        <div class="brand-header">CEN<span>WORK</span></div>
+        <div class="nav-container">
+            <div class="nav-item active" onclick="showTab('tasks')">Tasks</div>
+            <div class="nav-item" onclick="showTab('ongoing')">Ongoing</div>
+            <div class="nav-item" onclick="showTab('report')">Report</div>
+        </div>
+    </div>
+
+    <div class="workspace">
+        
+        <div id="tab-tasks" class="page active">
+            <h1>Work Station</h1>
+            <div class="card">
+                <h2 style="font-size:1.1rem; margin-bottom:18px; font-weight:700;">Create Assignment</h2>
+                <input type="text" id="t-name" placeholder="Task description...">
+                <div style="display:flex; gap:12px">
+                    <input type="number" id="t-hr" placeholder="Hours">
+                    <input type="number" id="t-min" placeholder="Minutes">
+                </div>
+                <button class="btn btn-primary" onclick="addPending()">Add to Pending</button>
             </div>
-            <button class="btn btn-primary" onclick="addPending()">Add to Pending</button>
+            <h2 style="font-size:0.85rem; color:var(--text-sub); text-transform:uppercase; margin: 30px 0 15px 5px; letter-spacing: 1px; font-weight:700;">Pending Queue</h2>
+            <div id="pending-list"></div>
         </div>
-        <h2 style="font-size:0.9rem; color:var(--text-sub); text-transform:uppercase; margin: 20px 0 10px 5px;">Pending Queue</h2>
-        <div id="pending-list"></div>
-    </div>
 
-    <div id="tab-ongoing" class="page">
-        <h1>Ongoing Work</h1>
-        <div class="card" id="ongoing-content">
-            <p style="text-align:center; color:var(--text-sub); padding:40px 0;">No active tasks found in the system.</p>
+        <div id="tab-ongoing" class="page">
+            <h1>Ongoing Work</h1>
+            <div class="card" id="ongoing-content">
+                <p style="text-align:center; color:var(--text-sub); padding:40px 0; font-weight: 500;">No active tasks found in the system.</p>
+            </div>
         </div>
-    </div>
 
-    <div id="tab-report" class="page">
-        <h1>Attendance</h1>
-        <div class="card" id="att-box" style="text-align:center; padding:30px;">
-            <h3 id="current-time-display">00:00:00</h3>
-            <p id="att-text" style="font-weight:700; margin-top:10px">Status: STANDBY</p>
+        <div id="tab-report" class="page">
+            <h1>Attendance</h1>
+            <div class="card" id="att-box" style="text-align:center; padding:40px 20px;">
+                <h3 id="current-time-display">00:00:00</h3>
+                <p id="att-text" style="font-weight:700; color:var(--text-sub); font-size:1rem; letter-spacing: 0.5px;">Status: STANDBY</p>
+            </div>
+            <div style="display:flex; gap:15px">
+                <button class="btn btn-success" onclick="attendance('IN')">Clock In</button>
+                <button class="btn btn-danger" onclick="attendance('OUT')">Clock Out</button>
+            </div>
+            <div id="attendance-logs" style="margin-top:25px"></div>
         </div>
-        <div style="display:flex; gap:10px">
-            <button class="btn btn-success" onclick="attendance('IN')">Clock In</button>
-            <button class="btn btn-danger" onclick="attendance('OUT')">Clock Out</button>
-        </div>
-        <div id="attendance-logs" style="margin-top:20px"></div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="showTab('tasks')">Tasks</div>
-        <div class="nav-item" onclick="showTab('ongoing')">Ongoing</div>
-        <div class="nav-item" onclick="showTab('report')">Report</div>
     </div>
 
     <script>
@@ -127,7 +421,7 @@
                 list.innerHTML += `
                     <div class="task-item">
                         <div><b>${t.name}</b><br><small>${t.totalMins}m deadline</small></div>
-                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:10px 18px; border-radius:10px; font-weight:700">START</button>
+                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:12px 22px; border-radius:10px; font-weight:700; cursor:pointer;">START</button>
                     </div>`;
             });
         });
@@ -147,7 +441,7 @@
             clearInterval(timerInt);
 
             if(!activeTask) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:40px 0;">No active tasks.</p>';
+                container.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:40px 0; font-weight:500;">No active tasks.</p>';
                 return;
             }
 
@@ -160,7 +454,7 @@
                 const payout = calculatePayout(activeTask.totalMins, elapsedMins);
 
                 container.innerHTML = `
-                    <h2 style="text-align:center">${activeTask.name}</h2>
+                    <h2 style="text-align:center; margin-bottom:10px; font-size:1.5rem;">${activeTask.name}</h2>
                     <div id="timer-val">${h}:${m}:${s}</div>
                     <div class="payout-live">CEN ${payout.toFixed(2)}</div>
                     <button class="btn btn-success" onclick="completeTask()">FINISH & CLAIM</button>
