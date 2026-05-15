@@ -3,256 +3,287 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CEN_WORK | Professional Dashboard</title>
+    <title>CEN_WORK | Professional Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     
     <style>
         :root {
-            --bg: #f4f7f9;
+            --bg: #f8fafc;
             --surface: #ffffff;
-            --primary: #1e293b;
+            --primary: #0f172a;
             --accent: #3b82f6;
-            --text-main: #0f172a;
             --text-sub: #64748b;
-            --success: #22c55e;
+            --success: #10b981;
             --danger: #ef4444;
-            --shadow: 0 4px 20px rgba(0,0,0,0.05);
+            --border: #e2e8f0;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: var(--text-main); padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 1000px; animation: fadeIn 0.5s ease; }
-        
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        body { background: var(--bg); color: var(--primary); padding-bottom: 80px; } /* Space for mobile nav */
 
-        .card { background: var(--surface); border-radius: 20px; padding: 25px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.02); }
-        h2 { font-size: 1.2rem; margin-bottom: 20px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-
-        /* Form Styling */
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 5px; font-weight: 600; }
-        input, select, textarea { 
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; 
-            font-size: 0.9rem; outline: none; transition: border 0.2s;
+        /* --- MOBILE NAVIGATION --- */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 70px;
+            background: var(--surface); display: flex; justify-content: space-around;
+            align-items: center; border-top: 1px solid var(--border); z-index: 1000;
         }
-        input:focus { border-color: var(--accent); }
+        .nav-item { flex: 1; text-align: center; font-size: 0.75rem; color: var(--text-sub); font-weight: 600; cursor: pointer; }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { display: block; font-size: 1.2rem; margin-bottom: 4px; }
 
-        /* Timer Logic UI */
-        .active-task-box { 
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); 
-            border: 2px solid var(--accent); position: relative;
-        }
-        #timer-display { font-size: 3.5rem; font-weight: 800; color: var(--primary); margin: 15px 0; font-variant-numeric: tabular-nums; }
+        /* --- LAYOUT --- */
+        .page { display: none; padding: 20px; max-width: 600px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- COMPONENTS --- */
+        .card { background: var(--surface); border-radius: 20px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+        h1 { font-size: 1.5rem; margin-bottom: 20px; }
+        h2 { font-size: 1rem; margin-bottom: 15px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+
         .btn { 
-            padding: 12px 24px; border-radius: 12px; border: none; cursor: pointer; 
-            font-weight: 700; transition: all 0.2s; width: 100%; font-size: 0.9rem;
+            width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; 
+            transition: 0.2s; font-size: 0.9rem; margin-top: 10px;
         }
         .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { opacity: 0.9; transform: translateY(-2px); }
-        .btn-stop { background: var(--danger); color: white; margin-top: 10px; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
 
-        /* Status Badges */
-        .badge { padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .badge-pending { background: #fef3c7; color: #92400e; }
-        .badge-ongoing { background: #dbeafe; color: #1e40af; }
-
-        /* Log Book */
-        .log-item { 
-            display: flex; justify-content: space-between; padding: 12px; 
-            border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; 
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px; font-size: 1rem;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+        /* --- TASK ITEMS --- */
+        .task-item { 
+            background: #f1f5f9; padding: 15px; border-radius: 12px; margin-bottom: 10px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .task-info h4 { font-size: 0.95rem; }
+        .task-info p { font-size: 0.8rem; color: var(--text-sub); }
+
+        /* --- TIMER AREA --- */
+        #timer-val { font-size: 3rem; font-weight: 800; text-align: center; margin: 20px 0; color: var(--primary); }
+        .payout-live { text-align: center; font-weight: 700; color: var(--success); font-size: 1.2rem; }
+
+        /* --- ATTENDANCE --- */
+        .attendance-status { text-align: center; padding: 20px; border-radius: 15px; margin-bottom: 15px; }
+        .status-in { background: #dcfce7; color: #166534; }
+        .status-out { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <div>
-            <h1 style="font-weight: 800; letter-spacing: -1px;">CEN_WORK</h1>
-            <p style="color: var(--text-sub); font-size: 0.9rem;">Rate: 350 CEN/HR</p>
-        </div>
-        <div id="streak-counter" class="card" style="padding: 10px 20px; border-radius: 50px; font-weight: 700; color: var(--accent);">
-            🔥 0 Day Streak
-        </div>
-    </header>
-
-    <div class="grid">
-        <!-- Task Assignment -->
+    <!-- TAB 1: ASSIGN & PENDING -->
+    <div id="tab-tasks" class="page active">
+        <h1>Work Station</h1>
         <div class="card">
             <h2>Assign New Task</h2>
-            <div class="input-group">
-                <label>Task Description</label>
-                <input type="text" id="task-name" placeholder="e.g. Backend API Development">
+            <input type="text" id="t-name" placeholder="Task Name">
+            <div style="display:flex; gap:10px">
+                <input type="number" id="t-hr" placeholder="Hrs">
+                <input type="number" id="t-min" placeholder="Min">
             </div>
-            <div style="display: flex; gap: 10px;">
-                <div class="input-group" style="flex: 1;">
-                    <label>Hours</label>
-                    <input type="number" id="task-hr" value="1" min="0">
-                </div>
-                <div class="input-group" style="flex: 1;">
-                    <label>Minutes</label>
-                    <input type="number" id="task-min" value="0" min="0" max="59">
-                </div>
-            </div>
-            <button class="btn btn-primary" onclick="startTask()">Start Ongoing Task</button>
+            <button class="btn btn-primary" onclick="addPending()">Add to Pending</button>
         </div>
 
-        <!-- Active Timer -->
-        <div class="card active-task-box" id="timer-card">
-            <span class="badge badge-ongoing" id="status-label">System Idle</span>
-            <h2 id="current-task-title" style="margin-top: 10px;">No Active Work</h2>
-            <div id="timer-display">00:00:00</div>
-            <div id="live-payout" style="font-weight: 600; color: var(--success); margin-bottom: 15px;">Estimated Payout: CEN 0.00</div>
-            <button class="btn btn-stop" id="stop-btn" style="display: none;" onclick="stopTask()">Complete & Secure Funds</button>
-        </div>
+        <h2>Pending Queue</h2>
+        <div id="pending-list"></div>
+    </div>
 
-        <!-- Logs & Pending -->
-        <div class="card" style="grid-column: span 2;">
-            <h2>Work Log & Payout History</h2>
-            <div id="log-book">
-                <p style="color: var(--text-sub); font-size: 0.9rem;">No work recorded for this session.</p>
+    <!-- TAB 2: ONGOING -->
+    <div id="tab-ongoing" class="page">
+        <h1>Ongoing Work</h1>
+        <div class="card" id="active-work-card">
+            <div id="ongoing-content">
+                <p style="text-align:center; color:var(--text-sub)">No task running.</p>
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    // FIREBASE CONFIG (Same as Bank)
-    const firebaseConfig = {
-        apiKey: "AIzaSyDL7CPrwuAw-BrIPHQuNtydc1h1g73sFVk",
-        authDomain: "centrol-bank.firebaseapp.com",
-        databaseURL: "https://centrol-bank-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "centrol-bank"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
+    <!-- TAB 3: REPORT (ATTENDANCE) -->
+    <div id="tab-report" class="page">
+        <h1>Reporting Desk</h1>
+        <div class="card attendance-status status-out" id="att-box">
+            <span id="att-text">OFF DUTY</span>
+            <h3 id="current-time-display">00:00:00</h3>
+        </div>
+        <div style="display:flex; gap:10px">
+            <button class="btn btn-success" onclick="attendance('IN')">Clock In</button>
+            <button class="btn btn-danger" onclick="attendance('OUT')">Clock Out</button>
+        </div>
+        <h2 style="margin-top:25px">Log Book</h2>
+        <div id="attendance-logs"></div>
+    </div>
 
-    let timerInterval;
-    let startTime;
-    let assignedMinutes = 0;
-    let isRunning = false;
-    const CEN_RATE_PER_MIN = 350 / 60;
+    <!-- BOTTOM NAVIGATION -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="showTab('tasks')">Tasks</div>
+        <div class="nav-item" onclick="showTab('ongoing')">Ongoing</div>
+        <div class="nav-item" onclick="showTab('report')">Reporting</div>
+    </div>
 
-    function startTask() {
-        const name = document.getElementById('task-name').value;
-        const hr = parseInt(document.getElementById('task-hr').value) || 0;
-        const min = parseInt(document.getElementById('task-min').value) || 0;
-        
-        if (!name) return alert("Enter task detail");
-        
-        assignedMinutes = (hr * 60) + min;
-        if (assignedMinutes <= 0) return alert("Set a valid deadline");
-
-        startTime = new Date();
-        isRunning = true;
-        
-        document.getElementById('current-task-title').innerText = name;
-        document.getElementById('status-label').innerText = "Ongoing";
-        document.getElementById('stop-btn').style.display = "block";
-        
-        timerInterval = setInterval(updateUI, 1000);
-    }
-
-    function updateUI() {
-        const now = new Date();
-        const diff = Math.floor((now - startTime) / 1000);
-        
-        const h = Math.floor(diff / 3600).toString().padStart(2, '0');
-        const m = Math.floor((diff % 3600) / 60).toString().padStart(2, '0');
-        const s = (diff % 60).toString().padStart(2, '0');
-        
-        document.getElementById('timer-display').innerText = `${h}:${m}:${s}`;
-        
-        // Live Payout Logic
-        const currentMins = diff / 60;
-        const payout = calculateMoney(assignedMinutes, currentMins);
-        document.getElementById('live-payout').innerText = `Estimated Payout: CEN ${payout.toFixed(2)}`;
-    }
-
-    function calculateMoney(assigned, actual) {
-        const baseMoney = assigned * CEN_RATE_PER_MIN;
-        
-        // 1st Logic: Under 85% of time
-        if (actual <= assigned * 0.85) {
-            return actual * CEN_RATE_PER_MIN;
-        }
-        
-        // 2nd Logic: Exceed 85% but under 100% + 1hr
-        if (actual <= assigned + 60) {
-            return baseMoney;
-        }
-        
-        // 3rd Logic: Exceed 100% + 1hr (Penalty)
-        const penaltyBuffer = assigned + 60;
-        if (actual > penaltyBuffer) {
-            const overtime = actual - penaltyBuffer;
-            const deductionUnits = Math.floor(overtime / 30) + 1; // 15% immediately, then every 30m
-            const totalDeduction = (baseMoney * 0.15) * deductionUnits;
-            return Math.max(0, baseMoney - totalDeduction);
-        }
-        return 0;
-    }
-
-    async function stopTask() {
-        clearInterval(timerInterval);
-        const now = new Date();
-        const actualMins = (now - startTime) / 60000;
-        const finalPayout = calculateMoney(assignedMinutes, actualMins);
-        const taskName = document.getElementById('current-task-title').innerText;
-
-        // 1. Update Firebase Balance
+    <script>
+        // FIREBASE INITIALIZATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyDL7CPrwuAw-BrIPHQuNtydc1h1g73sFVk",
+            authDomain: "centrol-bank.firebaseapp.com",
+            databaseURL: "https://centrol-bank-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "centrol-bank"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
         const userRef = db.ref('users/pranshi_main');
-        const snapshot = await userRef.child('balance').get();
-        const currentBal = snapshot.val() || 0;
-        
-        await userRef.update({
-            balance: currentBal + finalPayout
+
+        let timerInt;
+        let activeTask = null;
+        const CEN_RATE_MIN = 350/60;
+
+        // TAB SYSTEM
+        function showTab(tabId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        // CLOCK DISPLAY
+        setInterval(() => {
+            document.getElementById('current-time-display').innerText = new Date().toLocaleTimeString();
+        }, 1000);
+
+        // --- TASK LOGIC ---
+        async function addPending() {
+            const name = document.getElementById('t-name').value;
+            const hr = parseInt(document.getElementById('t-hr').value) || 0;
+            const min = parseInt(document.getElementById('t-min').value) || 0;
+            if(!name) return;
+
+            const totalMins = (hr * 60) + min;
+            await userRef.child('pending').push({ name, totalMins });
+            document.getElementById('t-name').value = '';
+        }
+
+        userRef.child('pending').on('value', snap => {
+            const data = snap.val();
+            const list = document.getElementById('pending-list');
+            list.innerHTML = '';
+            if(!data) return;
+            Object.keys(data).forEach(id => {
+                const t = data[id];
+                list.innerHTML += `
+                    <div class="task-item">
+                        <div class="task-info">
+                            <h4>${t.name}</h4>
+                            <p>Duration: ${t.totalMins}m</p>
+                        </div>
+                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:8px 15px; border-radius:8px; font-weight:700">START</button>
+                    </div>`;
+            });
         });
 
-        // 2. Log Transaction to Bank History
-        const logRef = userRef.child('history').push();
-        await logRef.set({
-            amount: finalPayout,
-            description: `Work: ${taskName}`,
-            timestamp: now.toLocaleString(),
-            type: 'CREDIT'
-        });
+        async function startOngoing(id) {
+            const snap = await userRef.child('pending/' + id).get();
+            const task = snap.val();
+            
+            activeTask = { ...task, startTime: Date.now() };
+            await userRef.child('pending/' + id).remove();
+            
+            showTab('ongoing');
+            runTimer();
+        }
 
-        // 3. Log Work Details
-        const workLogRef = userRef.child('work_logs').push();
-        await workLogRef.set({
-            task: taskName,
-            assigned: assignedMinutes,
-            actual: actualMins.toFixed(2),
-            payout: finalPayout,
-            date: now.toISOString().split('T')[0]
-        });
+        function runTimer() {
+            const container = document.getElementById('ongoing-content');
+            clearInterval(timerInt);
 
-        // Reset UI
-        alert(`Task Complete! CEN ${finalPayout.toFixed(2)} added to Central Bank.`);
-        location.reload();
-    }
+            timerInt = setInterval(() => {
+                const elapsedSecs = Math.floor((Date.now() - activeTask.startTime) / 1000);
+                const elapsedMins = elapsedSecs / 60;
+                
+                const h = Math.floor(elapsedSecs / 3600).toString().padStart(2, '0');
+                const m = Math.floor((elapsedSecs % 3600) / 60).toString().padStart(2, '0');
+                const s = (elapsedSecs % 60).toString().padStart(2, '0');
 
-    // Load Logs
-    db.ref('users/pranshi_main/work_logs').limitToLast(5).on('value', snap => {
-        const logs = snap.val();
-        if(!logs) return;
-        let html = '';
-        Object.values(logs).reverse().forEach(l => {
-            html += `<div class="log-item">
-                <span><b>${l.task}</b><br><small>${l.date}</small></span>
-                <span>${l.actual}m / ${l.assigned}m</span>
-                <span style="color:var(--success); font-weight:700">+${l.payout.toFixed(2)}</span>
-            </div>`;
+                const payout = calculatePayout(activeTask.totalMins, elapsedMins);
+
+                container.innerHTML = `
+                    <h2>${activeTask.name}</h2>
+                    <p style="font-size:0.8rem">DEADLINE: ${activeTask.totalMins}m</p>
+                    <div id="timer-val">${h}:${m}:${s}</div>
+                    <div class="payout-live">CEN ${payout.toFixed(2)}</div>
+                    <button class="btn btn-success" onclick="completeTask()">FINISH & CLAIM</button>
+                `;
+            }, 1000);
+        }
+
+        function calculatePayout(assigned, actual) {
+            const base = assigned * CEN_RATE_MIN;
+            if (actual <= assigned * 0.85) return actual * CEN_RATE_MIN;
+            if (actual <= assigned + 60) return base;
+            
+            const penaltyPoint = assigned + 60;
+            const overtime = actual - penaltyPoint;
+            const deductions = Math.floor(overtime / 30) + 1;
+            return Math.max(0, base - (base * 0.15 * deductions));
+        }
+
+        async function completeTask() {
+            clearInterval(timerInt);
+            const elapsedMins = (Date.now() - activeTask.startTime) / 60000;
+            const finalPay = calculatePayout(activeTask.totalMins, elapsedMins);
+
+            const snap = await userRef.child('balance').get();
+            const currentBal = snap.val() || 0;
+
+            // Update Bank
+            await userRef.update({ balance: currentBal + finalPay });
+            await userRef.child('history').push({
+                amount: finalPay,
+                description: "Work: " + activeTask.name,
+                timestamp: new Date().toLocaleString(),
+                type: "CREDIT"
+            });
+
+            alert("Payment Secured: CEN " + finalPay.toFixed(2));
+            location.reload();
+        }
+
+        // --- ATTENDANCE LOGIC ---
+        async function attendance(type) {
+            const now = new Date();
+            const box = document.getElementById('att-box');
+            const text = document.getElementById('att-text');
+
+            if(type === 'IN') {
+                box.className = 'card attendance-status status-in';
+                text.innerText = "ON DUTY";
+            } else {
+                box.className = 'card attendance-status status-out';
+                text.innerText = "OFF DUTY";
+            }
+
+            await userRef.child('attendance_logs').push({
+                type: type,
+                time: now.toLocaleTimeString(),
+                date: now.toLocaleDateString()
+            });
+        }
+
+        userRef.child('attendance_logs').limitToLast(10).on('value', snap => {
+            const logs = snap.val();
+            const container = document.getElementById('attendance-logs');
+            container.innerHTML = '';
+            if(!logs) return;
+            Object.values(logs).reverse().forEach(l => {
+                container.innerHTML += `
+                    <div class="task-item" style="background:white; border:1px solid var(--border)">
+                        <span><b>${l.type}</b></span>
+                        <span style="font-size:0.8rem; color:var(--text-sub)">${l.date} ${l.time}</span>
+                    </div>`;
+            });
         });
-        document.getElementById('log-book').innerHTML = html;
-    });
-</script>
+    </script>
 </body>
 </html>
