@@ -11,16 +11,16 @@
     
     <style>
         :root {
-            --bg: #0b0f19;
-            --surface: #141b2d;
-            --surface-card: #1f293d;
-            --primary: #f8fafc;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --text-sub: #94a3b8;
+            --bg: #090d16;
+            --surface: #111827;
+            --surface-card: #1f2937;
+            --primary: #f3f4f6;
+            --accent: #4f46e5;
+            --accent-hover: #4338ca;
+            --text-sub: #9ca3af;
             --success: #10b981;
             --danger: #ef4444;
-            --border: #2d3748;
+            --border: #374151;
             --sidebar-width: 260px;
         }
 
@@ -40,7 +40,6 @@
         }
 
         /* --- NAVIGATION SYSTEM --- */
-        /* Desktop Sidebar Layout */
         .navigation-panel {
             width: var(--sidebar-width);
             background: var(--surface);
@@ -56,19 +55,20 @@
         }
 
         .brand-header {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             margin-bottom: 40px;
             padding-left: 10px;
-            color: #fff;
+            color: #ffffff;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
         }
 
         .brand-header span {
-            color: var(--accent);
+            color: var(--text-sub);
+            font-weight: 400;
         }
 
         .nav-container {
@@ -80,24 +80,26 @@
         .nav-item { 
             display: flex;
             align-items: center;
-            padding: 14px 18px;
-            font-size: 0.95rem; 
+            padding: 12px 16px;
+            font-size: 0.9rem; 
             color: var(--text-sub); 
-            font-weight: 600; 
+            font-weight: 500; 
             cursor: pointer; 
-            border-radius: 12px;
+            border-radius: 8px;
             transition: all 0.2s ease;
         }
 
         .nav-item:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
             color: #fff;
         }
 
         .nav-item.active { 
-            background: var(--accent);
+            background: rgba(79, 70, 229, 0.15);
             color: #ffffff; 
-            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding-left: 13px;
         }
 
         /* --- MAIN WORKSPACE --- */
@@ -111,7 +113,7 @@
 
         .page { 
             display: none; 
-            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); 
         }
 
         .page.active { 
@@ -119,106 +121,100 @@
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             margin-bottom: 25px;
             letter-spacing: -0.5px;
+            color: #f9fafb;
         }
 
-        /* --- LUXURY UI CARDS --- */
+        /* --- CORPORATE CARDS --- */
         .card { 
             background: var(--surface); 
-            border-radius: 20px; 
-            padding: 30px; 
+            border-radius: 12px; 
+            padding: 24px; 
             margin-bottom: 25px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); 
             border: 1px solid var(--border); 
         }
 
         /* --- FORM ELEMENTS --- */
         input { 
             width: 100%; 
-            padding: 14px 16px; 
+            padding: 12px 14px; 
             background: var(--surface-card);
             border: 1px solid var(--border); 
-            border-radius: 12px; 
+            border-radius: 6px; 
             margin-bottom: 16px; 
             color: white;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            transition: all 0.15s ease;
         }
 
         input:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+            border-color: #6366f1;
         }
 
         input::placeholder {
-            color: #4a5568;
+            color: #6b7280;
         }
 
-        /* --- PREMIUM BUTTONS --- */
+        /* --- BUTTONS --- */
         .btn { 
             width: 100%; 
-            padding: 14px 24px; 
-            border-radius: 12px; 
+            padding: 12px 20px; 
+            border-radius: 6px; 
             border: none; 
-            font-weight: 700; 
+            font-weight: 600; 
             cursor: pointer; 
-            font-size: 0.95rem; 
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 0.9rem; 
+            transition: all 0.15s ease;
             display: inline-flex;
             justify-content: center;
             align-items: center;
         }
 
         .btn:active {
-            transform: scale(0.98);
+            transform: scale(0.99);
         }
 
         .btn-primary { background: var(--accent); color: white; }
         .btn-primary:hover { background: var(--accent-hover); }
         
-        .btn-success { background: var(--success); color: white; }
-        .btn-success:hover { filter: brightness(1.1); }
+        .btn-success { background: #059669; color: white; }
+        .btn-success:hover { background: #047857; }
         
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-danger:hover { filter: brightness(1.1); }
+        .btn-danger { background: #dc2626; color: white; }
+        .btn-danger:hover { background: #b91c1c; }
         
         .btn-outline { 
             background: transparent; 
-            border: 2px solid var(--border); 
-            color: #e2e8f0; 
-            margin-top: 15px; 
+            border: 1px solid var(--border); 
+            color: #d1d5db; 
+            margin-top: 12px; 
         }
         .btn-outline:hover {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(220, 38, 38, 0.08);
             border-color: var(--danger);
             color: var(--danger);
         }
 
-        /* --- DYNAMIC LIST ITEMS --- */
+        /* --- LISTS & TABLES --- */
         .task-item { 
             background: var(--surface); 
-            padding: 20px; 
-            border-radius: 16px; 
+            padding: 18px 20px; 
+            border-radius: 8px; 
             margin-bottom: 12px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             border: 1px solid var(--border); 
-            transition: transform 0.2s ease;
-        }
-
-        .task-item:hover {
-            transform: translateY(-2px);
-            border-color: #4a5568;
         }
 
         .task-item b {
-            font-size: 1.05rem;
-            color: #fff;
+            font-size: 1rem;
+            color: #f3f4f6;
         }
 
         .task-item small {
@@ -228,100 +224,90 @@
             margin-top: 4px;
         }
 
-        /* --- TIME & ANALYTICS PANELS --- */
+        .corporate-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .corporate-table th {
+            background: #1f2937;
+            color: #e5e7eb;
+            padding: 10px 14px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .corporate-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #1f2937;
+            color: #d1d5db;
+        }
+
+        .badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .badge-in { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .badge-out { background: rgba(239, 44, 44, 0.15); color: #ef4444; }
+        .badge-credit { background: rgba(16, 185, 129, 0.15); color: #10b981; }
+        .badge-debit { background: rgba(239, 44, 44, 0.15); color: #ef4444; }
+
+        /* --- TIMER --- */
         #timer-val { 
-            font-size: 4.5rem; 
-            font-weight: 800; 
+            font-size: 3.5rem; 
+            font-weight: 700; 
             text-align: center; 
-            margin: 20px 0; 
-            letter-spacing: -3px; 
-            color: #fff;
+            margin: 15px 0; 
+            letter-spacing: -1px; 
+            color: #ffffff;
             font-variant-numeric: tabular-nums;
         }
 
         .payout-live { 
             text-align: center; 
-            font-weight: 800; 
-            color: var(--success); 
-            font-size: 1.75rem; 
-            margin-bottom: 25px; 
-            letter-spacing: -0.5px;
-            background: rgba(16, 185, 129, 0.1);
-            padding: 10px;
-            border-radius: 12px;
+            font-weight: 700; 
+            color: #10b981; 
+            font-size: 1.3rem; 
+            margin-bottom: 20px; 
+            background: rgba(16, 185, 129, 0.06);
+            padding: 8px;
+            border-radius: 6px;
             display: inline-block;
             width: 100%;
+            border: 1px solid rgba(16, 185, 129, 0.15);
         }
 
         #current-time-display {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: #fff;
-            margin-bottom: 10px;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #ffffff;
+            margin-bottom: 6px;
         }
 
         /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 900px) {
-            body {
-                flex-direction: column;
-                padding-bottom: 90px;
-            }
-
+            body { flex-direction: column; padding-bottom: 80px; }
             .navigation-panel {
-                position: fixed; 
-                bottom: 0; 
-                left: 0; 
-                width: 100%; 
-                height: 75px;
-                background: var(--surface); 
-                flex-direction: row; 
-                justify-content: space-around;
-                align-items: center; 
-                border-top: 1px solid var(--border); 
-                border-right: none;
-                padding: 0 10px;
-                z-index: 1000;
-                top: auto;
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 65px;
+                flex-direction: row; justify-content: space-around; align-items: center; 
+                border-top: 1px solid var(--border); border-right: none; padding: 0; top: auto;
             }
-
-            .brand-header {
-                display: none;
-            }
-
-            .nav-container {
-                flex-direction: row;
-                width: 100%;
-                justify-content: space-around;
-                gap: 5px;
-            }
-
-            .nav-item { 
-                flex: 1; 
-                flex-direction: column;
-                text-align: center; 
-                justify-content: center;
-                font-size: 0.8rem; 
-                padding: 10px 5px;
-                font-weight: 700;
-            }
-
-            .nav-item.active {
-                box-shadow: none;
-            }
-
-            .workspace {
-                margin-left: 0;
-                padding: 20px;
-            }
-
-            #timer-val {
-                font-size: 3.5rem;
-            }
+            .brand-header { display: none; }
+            .nav-container { flex-direction: row; width: 100%; justify-content: space-around; gap: 0; }
+            .nav-item { flex: 1; flex-direction: column; text-align: center; justify-content: center; font-size: 0.75rem; padding: 10px 0; border-radius: 0; }
+            .nav-item.active { border-left: none; border-top: 3px solid var(--accent); padding-left: 0; border-radius: 0; background: transparent; }
+            .workspace { margin-left: 0; padding: 20px; }
+            #timer-val { font-size: 2.8rem; }
         }
 
         @keyframes fadeIn { 
-            from { opacity: 0; transform: translateY(12px); } 
+            from { opacity: 0; transform: translateY(6px); } 
             to { opacity: 1; transform: translateY(0); } 
         }
     </style>
@@ -339,10 +325,11 @@
 
     <div class="workspace">
         
+        <!-- TASKS STATION -->
         <div id="tab-tasks" class="page active">
             <h1>Work Station</h1>
             <div class="card">
-                <h2 style="font-size:1.1rem; margin-bottom:18px; font-weight:700;">Create Assignment</h2>
+                <h2 style="font-size:1rem; margin-bottom:16px; font-weight:600; color:#e5e7eb;">Create Assignment</h2>
                 <input type="text" id="t-name" placeholder="Task description...">
                 <div style="display:flex; gap:12px">
                     <input type="number" id="t-hr" placeholder="Hours">
@@ -350,10 +337,11 @@
                 </div>
                 <button class="btn btn-primary" onclick="addPending()">Add to Pending</button>
             </div>
-            <h2 style="font-size:0.85rem; color:var(--text-sub); text-transform:uppercase; margin: 30px 0 15px 5px; letter-spacing: 1px; font-weight:700;">Pending Queue</h2>
+            <h2 style="font-size:0.8rem; color:var(--text-sub); text-transform:uppercase; margin: 25px 0 12px 4px; letter-spacing: 0.5px; font-weight:700;">Pending Queue</h2>
             <div id="pending-list"></div>
         </div>
 
+        <!-- ONGOING STATION -->
         <div id="tab-ongoing" class="page">
             <h1>Ongoing Work</h1>
             <div class="card" id="ongoing-content">
@@ -361,17 +349,61 @@
             </div>
         </div>
 
+        <!-- REPORT STATION (ATTENDANCE & WORK LOGS) -->
         <div id="tab-report" class="page">
-            <h1>Attendance</h1>
-            <div class="card" id="att-box" style="text-align:center; padding:40px 20px;">
+            <h1>Operational Metrics</h1>
+            
+            <div class="card" id="att-box" style="text-align:center; padding:30px 20px;">
                 <h3 id="current-time-display">00:00:00</h3>
-                <p id="att-text" style="font-weight:700; color:var(--text-sub); font-size:1rem; letter-spacing: 0.5px;">Status: STANDBY</p>
+                <p id="att-text" style="font-weight:600; color:var(--text-sub); font-size:0.9rem; letter-spacing: 0.5px;">Status: STANDBY</p>
             </div>
-            <div style="display:flex; gap:15px">
+            <div style="display:flex; gap:12px">
                 <button class="btn btn-success" onclick="attendance('IN')">Clock In</button>
                 <button class="btn btn-danger" onclick="attendance('OUT')">Clock Out</button>
             </div>
-            <div id="attendance-logs" style="margin-top:25px"></div>
+
+            <!-- Attendance Data Logs Box -->
+            <div class="card" style="margin-top:25px;">
+                <h2 style="font-size:1rem; font-weight:600; margin-bottom:10px;">Attendance Registers</h2>
+                <div style="overflow-x: auto;">
+                    <table class="corporate-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Timestamp</th>
+                                <th>Event Tracking</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attendance-logs-tbody">
+                            <tr>
+                                <td colspan="3" style="text-align:center; color:var(--text-sub);">No logs registered.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Completed Task History Data Logs Box -->
+            <div class="card" style="margin-top:25px;">
+                <h2 style="font-size:1rem; font-weight:600; margin-bottom:10px;">Ledger Statement History</h2>
+                <div style="overflow-x: auto;">
+                    <table class="corporate-table">
+                        <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Description / Scope</th>
+                                <th>Type</th>
+                                <th>Yield (CEN)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-logs-tbody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; color:var(--text-sub);">No historical entries found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
     </div>
@@ -394,11 +426,21 @@
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
-            event.currentTarget.classList.add('active');
+            
+            // Check to avoid errors if triggered outside direct nav clicks
+            if(event && event.currentTarget && event.currentTarget.classList) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Fallback tab highlight match rule
+                document.querySelectorAll('.nav-item').forEach(n => {
+                    if(n.getAttribute('onclick').includes(tabId)) n.classList.add('active');
+                });
+            }
         }
 
         setInterval(() => {
-            document.getElementById('current-time-display').innerText = new Date().toLocaleTimeString();
+            const clockEl = document.getElementById('current-time-display');
+            if (clockEl) clockEl.innerText = new Date().toLocaleTimeString();
         }, 1000);
 
         async function addPending() {
@@ -409,19 +451,25 @@
             const totalMins = (hr * 60) + min;
             await userRef.child('pending').push({ name, totalMins });
             document.getElementById('t-name').value = '';
+            document.getElementById('t-hr').value = '';
+            document.getElementById('t-min').value = '';
         }
 
+        // Live sync listener for Pending lists
         userRef.child('pending').on('value', snap => {
             const list = document.getElementById('pending-list');
             list.innerHTML = '';
             const data = snap.val();
-            if(!data) return;
+            if(!data) {
+                list.innerHTML = '<p style="color:var(--text-sub); font-size:0.9rem; padding-left:4px;">Queue clean. No entries awaiting action.</p>';
+                return;
+            }
             Object.keys(data).forEach(id => {
                 const t = data[id];
                 list.innerHTML += `
                     <div class="task-item">
-                        <div><b>${t.name}</b><br><small>${t.totalMins}m deadline</small></div>
-                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:12px 22px; border-radius:10px; font-weight:700; cursor:pointer;">START</button>
+                        <div><b>${t.name}</b><br><small>${t.totalMins}m allocation ceiling</small></div>
+                        <button onclick="startOngoing('${id}')" style="background:var(--accent); color:white; border:none; padding:10px 18px; border-radius:6px; font-weight:600; font-size:0.85rem; cursor:pointer;">Initialize</button>
                     </div>`;
             });
         });
@@ -435,13 +483,14 @@
             showTab('ongoing');
         }
 
+        // Live sync listener for Ongoing processes
         userRef.child('ongoing_active').on('value', snap => {
             const activeTask = snap.val();
             const container = document.getElementById('ongoing-content');
             clearInterval(timerInt);
 
             if(!activeTask) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:40px 0; font-weight:500;">No active tasks.</p>';
+                container.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:40px 0; font-weight:500;">No active processes monitored in system framework.</p>';
                 return;
             }
 
@@ -454,11 +503,11 @@
                 const payout = calculatePayout(activeTask.totalMins, elapsedMins);
 
                 container.innerHTML = `
-                    <h2 style="text-align:center; margin-bottom:10px; font-size:1.5rem;">${activeTask.name}</h2>
+                    <h2 style="text-align:center; margin-bottom:8px; font-size:1.3rem; font-weight:700;">${activeTask.name}</h2>
                     <div id="timer-val">${h}:${m}:${s}</div>
-                    <div class="payout-live">CEN ${payout.toFixed(2)}</div>
-                    <button class="btn btn-success" onclick="completeTask()">FINISH & CLAIM</button>
-                    <button class="btn btn-outline" onclick="terminateTask()">TERMINATE (NO PAY)</button>
+                    <div class="payout-live">Estimated Allocation Value: CEN ${payout.toFixed(4)}</div>
+                    <button class="btn btn-success" onclick="completeTask()">Authorize & Close Task</button>
+                    <button class="btn btn-outline" onclick="terminateTask()">Abort Operations (Void Record)</button>
                 `;
             }, 1000);
         });
@@ -475,6 +524,8 @@
         async function completeTask() {
             const snapActive = await userRef.child('ongoing_active').get();
             const activeTask = snapActive.val();
+            if(!activeTask) return;
+
             const elapsedMins = (Date.now() - activeTask.startTime) / 60000;
             const finalPay = calculatePayout(activeTask.totalMins, elapsedMins);
             const snapBal = await userRef.child('balance').get();
@@ -482,25 +533,77 @@
 
             await userRef.update({ balance: currentBal + finalPay });
             await userRef.child('history').push({
-                amount: finalPay, description: "Work: " + activeTask.name,
-                timestamp: new Date().toLocaleString(), type: "CREDIT"
+                amount: finalPay, 
+                description: "Work: " + activeTask.name,
+                timestamp: new Date().toLocaleString(), 
+                type: "CREDIT"
             });
             await userRef.child('ongoing_active').remove();
-            alert("Funds Transferred!");
+            alert("Funds Transferred & Account Reconciled!");
         }
 
         async function terminateTask() {
-            if(confirm("Terminate task? This will result in 0 CEN payout and no records.")) {
+            if(confirm("Confirm process abort? This clears parameters resulting in 0 CEN generation.")) {
                 await userRef.child('ongoing_active').remove();
             }
         }
 
         async function attendance(type) {
             await userRef.child('attendance_logs').push({
-                type, time: new Date().toLocaleTimeString(), date: new Date().toLocaleDateString()
+                type, 
+                time: new Date().toLocaleTimeString(), 
+                date: new Date().toLocaleDateString()
             });
             document.getElementById('att-text').innerText = "Status: " + (type === 'IN' ? 'ON DUTY' : 'OFF DUTY');
         }
+
+        // Live Real-Time Data Sync Pipeline for Attendance Lists
+        userRef.child('attendance_logs').on('value', snap => {
+            const tbody = document.getElementById('attendance-logs-tbody');
+            tbody.innerHTML = '';
+            const data = snap.val();
+            if(!data) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-sub);">No logs registered.</td></tr>`;
+                return;
+            }
+            // Reverse order rendering to show the latest logs at the top
+            Object.keys(data).reverse().forEach(id => {
+                const log = data[id];
+                const badgeClass = log.type === 'IN' ? 'badge-in' : 'badge-out';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${log.date}</td>
+                        <td>${log.time}</td>
+                        <td><span class="badge ${badgeClass}">${log.type}</span></td>
+                    </tr>
+                `;
+            });
+        });
+
+        // Live Real-Time Data Sync Pipeline for Ledger & History Statement Lists
+        userRef.child('history').on('value', snap => {
+            const tbody = document.getElementById('history-logs-tbody');
+            tbody.innerHTML = '';
+            const data = snap.val();
+            if(!data) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-sub);">No historical entries found.</td></tr>`;
+                return;
+            }
+            // Reverse order rendering to show the latest operations first
+            Object.keys(data).reverse().forEach(id => {
+                const record = data[id];
+                const typeClass = record.type === 'CREDIT' ? 'badge-credit' : 'badge-debit';
+                const prefix = record.type === 'CREDIT' ? '+' : '';
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="white-space: nowrap;">${record.timestamp}</td>
+                        <td>${record.description}</td>
+                        <td><span class="badge ${typeClass}">${record.type}</span></td>
+                        <td style="font-weight: 700; color: ${record.type === 'CREDIT' ? '#10b981' : '#ef4444'}">${prefix}${Number(record.amount).toFixed(4)}</td>
+                    </tr>
+                `;
+            });
+        });
     </script>
 </body>
 </html>
