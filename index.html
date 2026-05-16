@@ -255,7 +255,6 @@
         .badge-in { background: rgba(16, 185, 129, 0.15); color: #10b981; }
         .badge-out { background: rgba(239, 44, 44, 0.15); color: #ef4444; }
         .badge-credit { background: rgba(16, 185, 129, 0.15); color: #10b981; }
-        .badge-debit { background: rgba(239, 44, 44, 0.15); color: #ef4444; }
 
         /* --- TIMER --- */
         #timer-val { 
@@ -349,7 +348,7 @@
             </div>
         </div>
 
-        <!-- REPORT STATION (ATTENDANCE & WORK LOGS) -->
+        <!-- REPORT STATION (ATTENDANCE & FINISHED TASK LEDGER) -->
         <div id="tab-report" class="page">
             <h1>Operational Metrics</h1>
             
@@ -383,22 +382,23 @@
                 </div>
             </div>
 
-            <!-- Completed Task History Data Logs Box -->
+            <!-- Separated Done/Finished Tasks Financial Yield Ledger -->
             <div class="card" style="margin-top:25px;">
-                <h2 style="font-size:1rem; font-weight:600; margin-bottom:10px;">Ledger Statement History</h2>
+                <h2 style="font-size:1rem; font-weight:600; margin-bottom:4px; color: #ffffff;">Completed Task Statement Ledger</h2>
+                <p style="font-size:0.8rem; color:var(--text-sub); margin-bottom:12px;">Tracks real-time generated metrics strictly derived from authorized completed system tasks.</p>
                 <div style="overflow-x: auto;">
                     <table class="corporate-table">
                         <thead>
                             <tr>
-                                <th>Date/Time</th>
-                                <th>Description / Scope</th>
+                                <th>Timestamp</th>
+                                <th>Finished Task / Scope</th>
                                 <th>Type</th>
-                                <th>Yield (CEN)</th>
+                                <th>Yield Allocation</th>
                             </tr>
                         </thead>
                         <tbody id="history-logs-tbody">
                             <tr>
-                                <td colspan="4" style="text-align:center; color:var(--text-sub);">No historical entries found.</td>
+                                <td colspan="4" style="text-align:center; color:var(--text-sub);">No finished task records found.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -427,11 +427,9 @@
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
             
-            // Check to avoid errors if triggered outside direct nav clicks
-            if(event && event.currentTarget && event.currentTarget.classList) {
-                event.currentTarget.classList.add('active');
+            if(window.event && window.event.currentTarget && window.event.currentTarget.classList) {
+                window.event.currentTarget.classList.add('active');
             } else {
-                // Fallback tab highlight match rule
                 document.querySelectorAll('.nav-item').forEach(n => {
                     if(n.getAttribute('onclick').includes(tabId)) n.classList.add('active');
                 });
@@ -455,7 +453,6 @@
             document.getElementById('t-min').value = '';
         }
 
-        // Live sync listener for Pending lists
         userRef.child('pending').on('value', snap => {
             const list = document.getElementById('pending-list');
             list.innerHTML = '';
@@ -483,7 +480,6 @@
             showTab('ongoing');
         }
 
-        // Live sync listener for Ongoing processes
         userRef.child('ongoing_active').on('value', snap => {
             const activeTask = snap.val();
             const container = document.getElementById('ongoing-content');
@@ -534,7 +530,7 @@
             await userRef.update({ balance: currentBal + finalPay });
             await userRef.child('history').push({
                 amount: finalPay, 
-                description: "Work: " + activeTask.name,
+                description: "Work Completed: " + activeTask.name,
                 timestamp: new Date().toLocaleString(), 
                 type: "CREDIT"
             });
@@ -557,7 +553,6 @@
             document.getElementById('att-text').innerText = "Status: " + (type === 'IN' ? 'ON DUTY' : 'OFF DUTY');
         }
 
-        // Live Real-Time Data Sync Pipeline for Attendance Lists
         userRef.child('attendance_logs').on('value', snap => {
             const tbody = document.getElementById('attendance-logs-tbody');
             tbody.innerHTML = '';
@@ -566,7 +561,6 @@
                 tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-sub);">No logs registered.</td></tr>`;
                 return;
             }
-            // Reverse order rendering to show the latest logs at the top
             Object.keys(data).reverse().forEach(id => {
                 const log = data[id];
                 const badgeClass = log.type === 'IN' ? 'badge-in' : 'badge-out';
@@ -580,29 +574,36 @@
             });
         });
 
-        // Live Real-Time Data Sync Pipeline for Ledger & History Statement Lists
+        // Filtered explicitly for tasks finished through the app mechanics
         userRef.child('history').on('value', snap => {
             const tbody = document.getElementById('history-logs-tbody');
             tbody.innerHTML = '';
             const data = snap.val();
             if(!data) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-sub);">No historical entries found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-sub);">No finished task records found.</td></tr>`;
                 return;
             }
-            // Reverse order rendering to show the latest operations first
+            
+            let hasTasks = false;
             Object.keys(data).reverse().forEach(id => {
                 const record = data[id];
-                const typeClass = record.type === 'CREDIT' ? 'badge-credit' : 'badge-debit';
-                const prefix = record.type === 'CREDIT' ? '+' : '';
-                tbody.innerHTML += `
-                    <tr>
-                        <td style="white-space: nowrap;">${record.timestamp}</td>
-                        <td>${record.description}</td>
-                        <td><span class="badge ${typeClass}">${record.type}</span></td>
-                        <td style="font-weight: 700; color: ${record.type === 'CREDIT' ? '#10b981' : '#ef4444'}">${prefix}${Number(record.amount).toFixed(4)}</td>
-                    </tr>
-                `;
+                // Only renders items that match completed tasks
+                if (record.description && record.description.startsWith("Work Completed:")) {
+                    hasTasks = true;
+                    tbody.innerHTML += `
+                        <tr>
+                            <td style="white-space: nowrap;">${record.timestamp}</td>
+                            <td>${record.description.replace("Work Completed: ", "")}</td>
+                            <td><span class="badge badge-credit">COMPLETED</span></td>
+                            <td style="font-weight: 700; color: #10b981;">+${Number(record.amount).toFixed(4)} CEN</td>
+                        </tr>
+                    `;
+                }
             });
+
+            if (!hasTasks) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-sub);">No finished task records found.</td></tr>`;
+            }
         });
     </script>
 </body>
